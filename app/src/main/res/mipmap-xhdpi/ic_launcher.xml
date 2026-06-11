@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Blue background circle -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M24,24 m-24,0 a24,24 0,1,1 48,0 a24,24 0,1,1 -48,0" />
+
+    <!-- Database: top ellipse -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,10 C28.4,10 32,11.8 32,14 C32,16.2 28.4,18 24,18 C19.6,18 16,16.2 16,14 C16,11.8 19.6,10 24,10 Z" />
+
+    <!-- Database: cylinder body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,14 L16,30 C16,32.2 19.6,34 24,34 C28.4,34 32,32.2 32,30 L32,14 C32,16.2 28.4,18 24,18 C19.6,18 16,16.2 16,14 Z" />
+
+    <!-- Database: divider line -->
+    <path
+        android:strokeColor="#1976D2"
+        android:strokeWidth="1.2"
+        android:fillAlpha="0"
+        android:pathData="M16,22 C16,24.2 19.6,26 24,26 C28.4,26 32,24.2 32,22" />
+
+    <!-- Upload arrow: shaft -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:fillAlpha="0"
+        android:pathData="M24,36 L24,42" />
+
+    <!-- Upload arrow: head -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillAlpha="0"
+        android:pathData="M20,40 L24,36 L28,40" />
+
+</vector>

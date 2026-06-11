@@ -1,0 +1,54 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!--
+        DbFtpManager launcher icon foreground.
+        Combines a database cylinder (top) with an upload/FTP arrow (bottom).
+        White icon on blue (#1976D2) background.
+    -->
+
+    <!-- Database: top ellipse -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,28 C61.7,28 68,30.7 68,34 C68,37.3 61.7,40 54,40 C46.3,40 40,37.3 40,34 C40,30.7 46.3,28 54,28 Z" />
+
+    <!-- Database: cylinder body (rectangle between two ellipses) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,34 L40,64 C40,67.3 46.3,70 54,70 C61.7,70 68,67.3 68,64 L68,34 C68,37.3 61.7,40 54,40 C46.3,40 40,37.3 40,34 Z" />
+
+    <!-- Database: horizontal divider line 1 -->
+    <path
+        android:strokeColor="#1976D2"
+        android:strokeWidth="2"
+        android:fillAlpha="0"
+        android:pathData="M40,46 C40,49.3 46.3,52 54,52 C61.7,52 68,49.3 68,46" />
+
+    <!-- Database: horizontal divider line 2 -->
+    <path
+        android:strokeColor="#1976D2"
+        android:strokeWidth="2"
+        android:fillAlpha="0"
+        android:pathData="M40,58 C40,61.3 46.3,64 54,64 C61.7,64 68,61.3 68,58" />
+
+    <!-- Upload arrow: vertical shaft -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:fillAlpha="0"
+        android:pathData="M54,74 L54,90" />
+
+    <!-- Upload arrow: arrowhead -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillAlpha="0"
+        android:pathData="M46,82 L54,74 L62,82" />
+
+</vector>
