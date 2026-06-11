@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DB &amp; FTP Manager</string>
+
+    <!-- Main -->
+    <string name="title_connections">连接管理</string>
+    <string name="title_database">数据库</string>
+    <string name="title_ftp">FTP</string>
+
+    <!-- Connection -->
+    <string name="add_connection">添加连接</string>
+    <string name="edit_connection">编辑连接</string>
+    <string name="delete_connection">删除连接</string>
+    <string name="connection_name">连接名称</string>
+    <string name="connection_type">连接类型</string>
+    <string name="host">主机地址</string>
+    <string name="port">端口</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="database_name">数据库名</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="test_connection">测试连接</string>
+    <string name="connection_saved">连接已保存</string>
+    <string name="connection_deleted">连接已删除</string>
+    <string name="connection_test_success">连接测试成功</string>
+    <string name="connection_test_failed">连接测试失败</string>
+    <string name="please_fill_required">请填写必填字段</string>
+    <string name="confirm_delete">确认删除此连接？</string>
+    <string name="more">更多</string>
+
+    <!-- Database -->
+    <string name="databases">数据库列表</string>
+    <string name="tables">数据表</string>
+    <string name="columns">列信息</string>
+    <string name="sql_editor">SQL 编辑器</string>
+    <string name="execute">执行</string>
+    <string name="clear">清空</string>
+    <string name="history">历史记录</string>
+    <string name="result">查询结果</string>
+    <string name="no_data">暂无数据</string>
+    <string name="rows_affected">影响行数: %d</string>
+    <string name="query_time">耗时: %d ms</string>
+    <string name="add_row">添加行</string>
+    <string name="edit_row">编辑行</string>
+    <string name="delete_row">删除行</string>
+    <string name="confirm_delete_row">确认删除此行？</string>
+    <string name="refresh_data">刷新数据</string>
+    <string name="export_data">导出数据</string>
+    <string name="table_structure">表结构</string>
+    <string name="table_data">表数据</string>
+
+    <!-- FTP -->
+    <string name="ftp_browser">FTP 文件浏览器</string>
+    <string name="upload_file">上传文件</string>
+    <string name="download_file">下载文件</string>
+    <string name="delete_file">删除文件</string>
+    <string name="create_folder">新建文件夹</string>
+    <string name="rename">重命名</string>
+    <string name="file_name">文件名</string>
+    <string name="folder_name">文件夹名</string>
+    <string name="confirm_delete_file">确认删除此文件？</string>
+    <string name="upload_success">上传成功</string>
+    <string name="upload_failed">上传失败</string>
+    <string name="download_success">下载成功</string>
+    <string name="download_failed">下载失败</string>
+    <string name="delete_success">删除成功</string>
+    <string name="delete_failed">删除失败</string>
+    <string name="file_size">大小</string>
+    <string name="file_date">日期</string>
+    <string name="file_permissions">权限</string>
+
+    <!-- Common -->
+    <string name="loading">加载中…</string>
+    <string name="error">错误</string>
+    <string name="success">成功</string>
+    <string name="retry">重试</string>
+    <string name="ok">确定</string>
+    <string name="search">搜索</string>
+    <string name="no_results">无结果</string>
+    <string name="type_mysql">MySQL</string>
+    <string name="type_postgresql">PostgreSQL</string>
+    <string name="type_sqlserver">SQL Server</string>
+    <string name="type_sqlite">SQLite</string>
+    <string name="type_ftp">FTP</string>
+    <string name="type_sftp">SFTP</string>
+    <string name="type_oracle">Oracle</string>
+    <string name="type_mariadb">MariaDB</string>
+    <string name="default_ftp_port">21</string>
+    <string name="default_mysql_port">3306</string>
+    <string name="default_postgresql_port">5432</string>
+    <string name="default_sqlserver_port">1433</string>
+    <string name="default_oracle_port">1521</string>
+    <string name="default_mariadb_port">3306</string>
+</resources>
