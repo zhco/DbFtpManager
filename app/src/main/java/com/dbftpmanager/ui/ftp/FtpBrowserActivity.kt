@@ -12,6 +12,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -272,11 +273,11 @@ class FileListAdapter(
 
             if (file.isDirectory) {
                 ivIcon.setImageResource(android.R.drawable.ic_menu_view)
-                ivIcon.setColorFilter(view.context.getColor(R.color.primary))
+                ivIcon.setColorFilter(ContextCompat.getColor(view.context, R.color.primary))
                 tvFileDetails.text = file.permissions
             } else {
                 ivIcon.setImageResource(android.R.drawable.ic_menu_save)
-                ivIcon.setColorFilter(view.context.getColor(R.color.text_secondary))
+                ivIcon.setColorFilter(ContextCompat.getColor(view.context, R.color.text_secondary))
                 tvFileDetails.text = "${file.formattedSize}  |  ${if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""}"
             }
 

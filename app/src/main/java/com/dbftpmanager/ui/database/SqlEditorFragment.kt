@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -120,6 +121,7 @@ class SqlEditorFragment : Fragment() {
         }
 
         val items = history.map { it.sql }.toTypedArray()
+        val connectionId = history.first().connectionId
         android.app.AlertDialog.Builder(requireContext())
             .setTitle("SQL 历史记录")
             .setItems(items) { _, which ->
@@ -141,7 +143,7 @@ class SqlEditorFragment : Fragment() {
 class QueryResultAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var columns = listOf<String>()
-    private var rows = listOf<List<Any?>>
+    private var rows = listOf<List<Any?>>()
 
     fun submitData(cols: List<String>, data: List<List<Any?>>) {
         columns = cols
@@ -177,8 +179,8 @@ class QueryResultAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (holder) {
             is HeaderViewHolder -> {
                 tv.text = columns.joinToString(" | ")
-                tv.setBackgroundColor(holder.itemView.context.getColor(R.color.primary_light))
-                tv.setTextColor(holder.itemView.context.getColor(R.color.white))
+                tv.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.primary_light))
+                tv.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
             }
             is RowViewHolder -> {
                 val rowIndex = position - 1

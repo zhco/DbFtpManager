@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
@@ -62,9 +63,9 @@ class ConnectionAdapter(
 
             ivIcon.setColorFilter(
                 if (connection.isDatabaseType) {
-                    view.context.getColor(R.color.db_color)
+                    ContextCompat.getColor(view.context, R.color.db_color)
                 } else {
-                    view.context.getColor(R.color.ftp_color)
+                    ContextCompat.getColor(view.context, R.color.ftp_color)
                 }
             )
 
