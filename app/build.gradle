@@ -72,9 +72,9 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 
-    // Database Drivers (JDBC-like via jSQL)
+    // Database JDBC Drivers
     implementation 'org.xerial:sqlite-jdbc:3.44.1.0'
-    implementation 'mysql:mysql-connector-java:8.3.0'
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.postgresql:postgresql:42.7.1'
     implementation 'com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre11'
 
@@ -83,10 +83,4 @@ dependencies {
 
     // JSON
     implementation 'com.google.code.gson:gson:2.10.1'
-
-    // Image loading
-    implementation 'io.coil-kt:coil:2.5.0'
-
-    // File picker
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
 }
