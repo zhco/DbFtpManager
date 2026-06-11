@@ -4,10 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
-      - '.gitignore'
 
 jobs:
   build:
@@ -24,18 +20,12 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Make gradlew executable
-        run: |
-          chmod +x gradlew 2>/dev/null || true
-          # If no gradlew, generate it
-          if [ ! -f gradlew ]; then
-            gradle wrapper --gradle-version 8.5
-          fi
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
