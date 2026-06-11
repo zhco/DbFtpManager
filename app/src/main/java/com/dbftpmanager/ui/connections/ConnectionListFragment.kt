@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.FragmentStateAdapter
 import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
+import kotlinx.coroutines.launch
 
 class ConnectionListFragment : Fragment() {
 

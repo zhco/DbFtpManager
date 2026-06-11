@@ -32,7 +32,7 @@ class TableListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity())[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val emptyState = view.findViewById<View>(R.id.emptyState)

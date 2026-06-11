@@ -39,7 +39,7 @@ class TableDataActivity : AppCompatActivity() {
         toolbar.title = tableName
         toolbar.setNavigationOnClickListener { finish() }
 
-        viewModel = ViewModelProvider(this)[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
         val recyclerViewStructure = findViewById<RecyclerView>(R.id.recyclerViewStructure)
         val recyclerViewData = findViewById<RecyclerView>(R.id.recyclerViewData)

@@ -35,7 +35,7 @@ class SqlEditorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity())[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
 
         val etSql = view.findViewById<EditText>(R.id.etSqlInput)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)

@@ -41,7 +41,7 @@ class FtpBrowserActivity : AppCompatActivity() {
         toolbar.title = connection.name
         toolbar.setNavigationOnClickListener { finish() }
 
-        viewModel = ViewModelProvider(this)[FtpViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(FtpViewModel::class.java)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val swipeRefresh = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefresh)

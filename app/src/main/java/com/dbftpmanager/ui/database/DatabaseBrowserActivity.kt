@@ -40,7 +40,7 @@ class DatabaseBrowserActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel = ViewModelProvider(this)[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
         // Tab + ViewPager
         val tabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayout)
