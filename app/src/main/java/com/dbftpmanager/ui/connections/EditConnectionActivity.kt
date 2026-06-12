@@ -172,7 +172,7 @@ class EditConnectionActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
-                if (selectedType.isDatabaseType) {
+                if (ConnectionInfo(type = selectedType).isDatabaseType) {
                     val dbManager = DatabaseManager()
                     dbManager.testConnection(selectedType, host, port, username, password, database)
                 } else {

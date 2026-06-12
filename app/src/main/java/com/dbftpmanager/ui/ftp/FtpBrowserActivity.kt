@@ -274,11 +274,11 @@ class FileListAdapter(
 
             if (file.isDirectory) {
                 ivIcon.setImageResource(android.R.drawable.ic_menu_view)
-                ivIcon.setColorFilter(ContextCompat.getColor(view.context, R.color.primary))
+                ivIcon.setColorFilter(ContextCompat.getColor(itemView.context, R.color.primary))
                 tvFileDetails.text = file.permissions
             } else {
                 ivIcon.setImageResource(android.R.drawable.ic_menu_save)
-                ivIcon.setColorFilter(ContextCompat.getColor(view.context, R.color.text_secondary))
+                ivIcon.setColorFilter(ContextCompat.getColor(itemView.context, R.color.text_secondary))
                 tvFileDetails.text = "${file.formattedSize}  |  ${if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""}"
             }
 

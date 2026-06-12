@@ -15,6 +15,7 @@ import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ColumnInfo
 import com.dbftpmanager.data.model.ConnectionInfo
+import com.dbftpmanager.ui.viewmodel.DatabaseViewModel
 import kotlinx.coroutines.launch
 
 class TableDataActivity : AppCompatActivity() {
@@ -147,7 +148,7 @@ class TableDataActivity : AppCompatActivity() {
                         if (value.isEmpty()) "NULL" else "'$value'"
                     }
                 }
-                val sql = "INSERT INTO `$tableName` (${columns.joinToString(",") { "`$it`" }}) VALUES (${values.joinToString(",")})"
+                val sql = "INSERT INTO `$tableName` (${columns.joinToString(",") { col -> "`$col`" }}) VALUES (${values.joinToString(",")})"
                 viewModel.executeQuery(sql)
             }
             .setNegativeButton("取消", null)

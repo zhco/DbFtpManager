@@ -63,9 +63,9 @@ class ConnectionAdapter(
 
             ivIcon.setColorFilter(
                 if (connection.isDatabaseType) {
-                    ContextCompat.getColor(view.context, R.color.db_color)
+                    ContextCompat.getColor(itemView.context, R.color.db_color)
                 } else {
-                    ContextCompat.getColor(view.context, R.color.ftp_color)
+                    ContextCompat.getColor(itemView.context, R.color.ftp_color)
                 }
             )
 

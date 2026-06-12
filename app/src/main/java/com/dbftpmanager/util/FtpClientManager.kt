@@ -124,7 +124,7 @@ class FtpClientManager {
                     size = file.size,
                     lastModified = file.timestamp?.timeInMillis ?: 0L,
                     permissions = formatPermissions(file),
-                    isHidden = file.isHidden
+                    isHidden = file.name.startsWith(".")
                 )
             }.sortedWith(compareByDescending<FtpFileEntry> { it.isDirectory }.thenBy { it.name })
         } catch (e: Exception) {

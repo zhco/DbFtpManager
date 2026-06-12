@@ -19,6 +19,7 @@ import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.TableInfo
+import com.dbftpmanager.ui.viewmodel.DatabaseViewModel
 import kotlinx.coroutines.launch
 
 class DatabaseBrowserActivity : AppCompatActivity() {

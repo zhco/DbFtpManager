@@ -11,9 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.content.ContextCompat
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.QueryResult
+import com.dbftpmanager.ui.viewmodel.DatabaseViewModel
 import kotlinx.coroutines.launch
 
 class SqlEditorFragment : Fragment() {
@@ -120,7 +122,7 @@ class SqlEditorFragment : Fragment() {
             return
         }
 
-        val itemsList: List<String> = history.map { it.sql }
+        val itemsList: List<String> = history.map { item -> item.sql }
         val listView = android.widget.ListView(requireContext())
         val adapter = android.widget.ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, itemsList)
         listView.adapter = adapter
