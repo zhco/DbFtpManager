@@ -9,17 +9,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
+import com.dbftpmanager.data.model.QueryResult
 import kotlinx.coroutines.launch
 
 class SqlEditorFragment : Fragment() {
 
-    private lateinit var viewModel: DatabaseViewModel
+    private val viewModel: DatabaseViewModel by viewModels({ requireActivity() })
     private lateinit var connection: ConnectionInfo
     private lateinit var resultAdapter: QueryResultAdapter
 
@@ -34,8 +35,6 @@ class SqlEditorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
 
         val etSql = view.findViewById<EditText>(R.id.etSqlInput)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
@@ -69,7 +68,7 @@ class SqlEditorFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.queryResult.collect { result ->
+            viewModel.queryResult.collect { result: QueryResult? ->
                 progressBar.visibility = View.GONE
                 if (result == null) return@collect
 
@@ -116,7 +115,7 @@ class SqlEditorFragment : Fragment() {
     private fun showHistoryDialog(etSql: EditText) {
         val history = viewModel.sqlHistory.value
         if (history.isEmpty()) {
-            Toast.makeText(requireContext(), "暂无历史记录", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "暂无历史记录", Toast.LENGTH_SHORT).show()
             return
         }
 

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class TableListFragment : Fragment() {
 
-    private lateinit var viewModel: DatabaseViewModel
+    private val viewModel: DatabaseViewModel by viewModels({ requireActivity() })
     private lateinit var tableAdapter: TableListAdapter
     private lateinit var connection: ConnectionInfo
 
@@ -31,8 +31,6 @@ class TableListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val emptyState = view.findViewById<View>(R.id.emptyState)

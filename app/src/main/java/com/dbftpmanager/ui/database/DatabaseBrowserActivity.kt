@@ -9,14 +9,15 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.TableInfo
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class DatabaseBrowserActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: DatabaseViewModel
+    private val viewModel: DatabaseViewModel by viewModels()
     private lateinit var connection: ConnectionInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +40,6 @@ class DatabaseBrowserActivity : AppCompatActivity() {
             viewModel.disconnect()
             finish()
         }
-
-        viewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
         // Tab + ViewPager
         val tabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayout)
@@ -66,12 +65,13 @@ class DatabaseBrowserActivity : AppCompatActivity() {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerDb.adapter = adapter
 
-                    spinnerDb.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                    val listener: android.widget.AdapterView.OnItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
                         override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
                             viewModel.switchDatabase(databases[position])
                         }
                         override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
                     }
+                    spinnerDb.onItemSelectedListener = listener
                 }
             }
         }

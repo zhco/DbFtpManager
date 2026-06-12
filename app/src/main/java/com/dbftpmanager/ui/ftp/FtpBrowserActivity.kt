@@ -11,9 +11,9 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +27,7 @@ import java.util.*
 
 class FtpBrowserActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: FtpViewModel
+    private val viewModel: FtpViewModel by viewModels()
     private lateinit var adapter: FileListAdapter
     private lateinit var connection: ConnectionInfo
 
@@ -40,8 +40,6 @@ class FtpBrowserActivity : AppCompatActivity() {
         val toolbar = findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar)
         toolbar.title = connection.name
         toolbar.setNavigationOnClickListener { finish() }
-
-        viewModel = ViewModelProvider(this).get(FtpViewModel::class.java)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val swipeRefresh = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefresh)

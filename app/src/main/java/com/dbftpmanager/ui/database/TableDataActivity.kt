@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class TableDataActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: DatabaseViewModel
+    private val viewModel: DatabaseViewModel by viewModels()
     private lateinit var connection: ConnectionInfo
     private var tableName: String = ""
     private var showStructure = false
@@ -38,8 +38,6 @@ class TableDataActivity : AppCompatActivity() {
         val toolbar = findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar)
         toolbar.title = tableName
         toolbar.setNavigationOnClickListener { finish() }
-
-        viewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
         val recyclerViewStructure = findViewById<RecyclerView>(R.id.recyclerViewStructure)
         val recyclerViewData = findViewById<RecyclerView>(R.id.recyclerViewData)
