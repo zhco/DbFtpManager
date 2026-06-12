@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
+import com.dbftpmanager.data.model.TableInfo
 import kotlinx.coroutines.launch
 
 class TableListFragment : Fragment() {
@@ -22,7 +23,7 @@ class TableListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
         connection = arguments?.getSerializable("connection") as ConnectionInfo
     }
 
@@ -36,7 +37,7 @@ class TableListFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val emptyState = view.findViewById<View>(R.id.emptyState)
 
-        tableAdapter = TableListAdapter { tableName ->
+        tableAdapter = TableListAdapter { tableName: String ->
             val intent = Intent(requireContext(), TableDataActivity::class.java).apply {
                 putExtra("connection", connection)
                 putExtra("table_name", tableName)
@@ -48,7 +49,7 @@ class TableListFragment : Fragment() {
         recyclerView.adapter = tableAdapter
 
         lifecycleScope.launch {
-            viewModel.tables.collect { tables ->
+            viewModel.tables.collect { tables: List<TableInfo> ->
                 tableAdapter.submitList(tables)
                 emptyState.visibility = if (tables.isEmpty()) View.VISIBLE else View.GONE
             }

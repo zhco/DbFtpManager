@@ -26,7 +26,7 @@ class SqlEditorFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
         connection = arguments?.getSerializable("connection") as ConnectionInfo
     }
 
@@ -107,7 +107,7 @@ class SqlEditorFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.isLoading.collect { loading ->
+            viewModel.isLoading.collect { loading: Boolean ->
                 if (loading) progressBar.visibility = View.VISIBLE
             }
         }
@@ -116,15 +116,14 @@ class SqlEditorFragment : Fragment() {
     private fun showHistoryDialog(etSql: EditText) {
         val history = viewModel.sqlHistory.value
         if (history.isEmpty()) {
-            Toast.makeText(activity, "暂无历史记录", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "暂无历史记录", Toast.LENGTH_SHORT).show()
             return
         }
 
         val items = history.map { it.sql }.toTypedArray()
-        val connectionId = history.first().connectionId
         android.app.AlertDialog.Builder(requireContext())
             .setTitle("SQL 历史记录")
-            .setItems(items) { _, which ->
+            .setItems(items) { _: android.content.DialogInterface, which: Int ->
                 etSql.setText(items[which])
             }
             .setNegativeButton("关闭", null)

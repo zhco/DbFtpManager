@@ -9,8 +9,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
@@ -42,8 +40,8 @@ class ConnectionListFragment : Fragment() {
         val btnAddEmpty = emptyState.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAdd)
 
         adapter = ConnectionAdapter(
-            onItemClick = { connection -> openConnection(connection) },
-            onMenuClick = { connection, btn -> showPopupMenu(connection, btn) }
+            onItemClick = { connection: ConnectionInfo -> openConnection(connection) },
+            onMenuClick = { connection: ConnectionInfo, btn: View -> showPopupMenu(connection, btn) }
         )
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -52,8 +50,8 @@ class ConnectionListFragment : Fragment() {
         val repository = (requireActivity().application as App).connectionRepository
 
         lifecycleScope.launch {
-            repository.allConnections.collect { connections ->
-                val filtered = when (filterType) {
+            repository.allConnections.collect { connections: List<ConnectionInfo> ->
+                val filtered: List<ConnectionInfo> = when (filterType) {
                     FilterType.ALL -> connections
                     FilterType.DATABASE -> connections.filter { it.isDatabaseType }
                     FilterType.FTP -> connections.filter { it.isFtpType }
@@ -82,7 +80,7 @@ class ConnectionListFragment : Fragment() {
     private fun showPopupMenu(connection: ConnectionInfo, anchor: View) {
         val popup = android.widget.PopupMenu(requireContext(), anchor)
         popup.menuInflater.inflate(R.menu.menu_connection_item, popup.menu)
-        popup.setOnMenuItemClickListener { item ->
+        popup.setOnMenuItemClickListener { item: android.view.MenuItem ->
             when (item.itemId) {
                 R.id.action_edit -> {
                     startActivity(
@@ -105,24 +103,12 @@ class ConnectionListFragment : Fragment() {
     private fun showDeleteConfirm(connection: ConnectionInfo) {
         android.app.AlertDialog.Builder(requireContext())
             .setTitle(R.string.confirm_delete)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setPositiveButton(R.string.ok) { _: android.content.DialogInterface, _: Int ->
                 lifecycleScope.launch {
                     (requireActivity().application as App).connectionRepository.deleteConnection(connection)
                 }
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
-    }
-}
-
-class ConnectionPagerAdapter(fragmentActivity: androidx.fragment.app.FragmentActivity) :
-    FragmentStateAdapter(fragmentActivity) {
-    override fun getItemCount() = 2
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> ConnectionListFragment.newInstance(ConnectionListFragment.FilterType.DATABASE)
-            1 -> ConnectionListFragment.newInstance(ConnectionListFragment.FilterType.FTP)
-            else -> ConnectionListFragment.newInstance(ConnectionListFragment.FilterType.ALL)
-        }
     }
 }

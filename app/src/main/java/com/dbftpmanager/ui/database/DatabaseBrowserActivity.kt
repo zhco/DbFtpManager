@@ -11,13 +11,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.TableInfo
@@ -27,12 +25,13 @@ class DatabaseBrowserActivity : AppCompatActivity() {
 
     private lateinit var viewModel: DatabaseViewModel
     private lateinit var connection: ConnectionInfo
+    private var currentTab = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_database_browser)
 
-        viewModel = ViewModelProvider(this)[DatabaseViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
         connection = intent.getSerializableExtra("connection") as ConnectionInfo
 
@@ -43,24 +42,26 @@ class DatabaseBrowserActivity : AppCompatActivity() {
             finish()
         }
 
-        // Tab + ViewPager
-        val tabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayout)
-        val viewPager = findViewById<androidx.viewpager2.widget.ViewPager2>(R.id.viewPager)
+        // Tab buttons
+        val btnTabTables = findViewById<android.widget.Button>(R.id.btnTabTables)
+        val btnTabSql = findViewById<android.widget.Button>(R.id.btnTabSql)
 
-        viewPager.adapter = DatabasePagerAdapter(this, connection)
-        com.google.android.material.tabs.TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.tables)
-                1 -> getString(R.string.sql_editor)
-                else -> ""
-            }
-        }.attach()
+        // Show tables tab by default
+        showTab(0)
 
-        // 数据库选择 Spinner
+        btnTabTables.setOnClickListener {
+            showTab(0)
+        }
+
+        btnTabSql.setOnClickListener {
+            showTab(1)
+        }
+
+        // Database Spinner
         val spinnerDb = findViewById<android.widget.Spinner>(R.id.spinnerDatabase)
 
         lifecycleScope.launch {
-            viewModel.databases.collect { databases ->
+            viewModel.databases.collect { databases: List<String> ->
                 if (databases.isNotEmpty()) {
                     val adapter = ArrayAdapter(this@DatabaseBrowserActivity,
                         android.R.layout.simple_spinner_item, databases)
@@ -79,15 +80,37 @@ class DatabaseBrowserActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.error.collect { error ->
+            viewModel.error.collect { error: String? ->
                 error?.let {
                     Toast.makeText(this@DatabaseBrowserActivity, it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        // 连接
+        // Connect
         viewModel.connect(connection)
+    }
+
+    private fun showTab(tabIndex: Int) {
+        if (currentTab == tabIndex) return
+        currentTab = tabIndex
+
+        val btnTabTables = findViewById<android.widget.Button>(R.id.btnTabTables)
+        val btnTabSql = findViewById<android.widget.Button>(R.id.btnTabSql)
+
+        btnTabTables.isSelected = (tabIndex == 0)
+        btnTabSql.isSelected = (tabIndex == 1)
+
+        val fragment: Fragment = when (tabIndex) {
+            0 -> TableListFragment.newInstance(connection)
+            1 -> SqlEditorFragment.newInstance(connection)
+            else -> TableListFragment.newInstance(connection)
+        }
+
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.fragmentContainer, fragment)
+        }
     }
 
     override fun onDestroy() {
@@ -133,22 +156,6 @@ class TableListAdapter(
             tvTableName.text = table.name
             tvRowCount.text = if (table.rowCount >= 0) "${table.rowCount} 行" else ""
             itemView.setOnClickListener { onItemClick(table.name) }
-        }
-    }
-}
-
-class DatabasePagerAdapter(
-    fragmentActivity: FragmentActivity,
-    private val connection: ConnectionInfo
-) : FragmentStateAdapter(fragmentActivity) {
-
-    override fun getItemCount() = 2
-
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> TableListFragment.newInstance(connection)
-            1 -> SqlEditorFragment.newInstance(connection)
-            else -> TableListFragment.newInstance(connection)
         }
     }
 }

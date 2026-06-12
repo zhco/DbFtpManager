@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +32,7 @@ class TableDataActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_table_data)
 
-        viewModel = DatabaseViewModel(application as App)
+        viewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
 
         connection = intent.getSerializableExtra("connection") as ConnectionInfo
         tableName = intent.getStringExtra("table_name") ?: ""
@@ -82,13 +82,13 @@ class TableDataActivity : AppCompatActivity() {
             }
 
         lifecycleScope.launch {
-            viewModel.columns.collect { columns ->
+            viewModel.columns.collect { columns: List<ColumnInfo> ->
                 columnAdapter.submitList(columns)
             }
         }
 
         lifecycleScope.launch {
-            viewModel.queryResult.collect { result ->
+            viewModel.queryResult.collect { result: com.dbftpmanager.data.model.QueryResult? ->
                 swipeRefresh.isRefreshing = false
                 if (result != null && result.isSuccess && result.isSelect) {
                     dataAdapter.submitData(result.columns, result.rows)
@@ -97,12 +97,12 @@ class TableDataActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.isLoading.collect { loading ->
+            viewModel.isLoading.collect { loading: Boolean ->
                 // Handle loading state
             }
         }
 
-        // 加载数据
+        // Load data
         viewModel.selectTable(tableName)
     }
 
@@ -133,8 +133,8 @@ class TableDataActivity : AppCompatActivity() {
         android.app.AlertDialog.Builder(this)
             .setTitle("插入新行 - $tableName")
             .setView(scrollView)
-            .setPositiveButton("插入") { _, _ ->
-                val values = inputs.mapIndexed { index, et ->
+            .setPositiveButton("插入") { _: android.content.DialogInterface, _: Int ->
+                val values = inputs.mapIndexed { index: Int, et: android.widget.EditText ->
                     val col = columns[index]
                     val value = et.text.toString().trim()
                     if (col.dataType.contains("int", ignoreCase = true) ||
@@ -222,13 +222,13 @@ class TableDataAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val row = rows[position]
         val text = row.joinToString(" | ") { it?.toString() ?: "NULL" }
         (holder.itemView as TextView).text = text
-        holder.itemView.setOnClickListener { view ->
+        holder.itemView.setOnClickListener { view: View ->
             showRowDetail(view.context, columns, row)
         }
     }
 
     private fun showRowDetail(context: android.content.Context, columns: List<String>, row: List<Any?>) {
-        val items = columns.mapIndexed { index, col ->
+        val items = columns.mapIndexed { index: Int, col: String ->
             "$col: ${row.getOrNull(index)?.toString() ?: "NULL"}"
         }.toTypedArray()
 

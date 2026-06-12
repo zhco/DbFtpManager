@@ -25,29 +25,37 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Tab: 表列表 / SQL编辑器 -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <!-- Tab buttons: Tables / SQL Editor -->
+    <LinearLayout
+        android:id="@+id/tabContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:tabMode="fixed"
-        app:tabGravity="fill">
+        android:orientation="horizontal">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnTabTables"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/tables" />
+            android:layout_weight="1"
+            android:text="@string/tables"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnTabSql"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/sql_editor" />
+            android:layout_weight="1"
+            android:text="@string/sql_editor"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
-    </com.google.android.material.tabs.TabLayout>
+    </LinearLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <!-- Fragment container -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

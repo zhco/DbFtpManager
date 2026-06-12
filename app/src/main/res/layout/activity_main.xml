@@ -23,32 +23,38 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Tab Layout -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <!-- Tab buttons -->
+    <LinearLayout
+        android:id="@+id/tabContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="2dp"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:orientation="horizontal">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnTabDatabase"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/title_database" />
+            android:layout_weight="1"
+            android:text="@string/title_database"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnTabFtp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/title_ftp" />
+            android:layout_weight="1"
+            android:text="@string/title_ftp"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
-    </com.google.android.material.tabs.TabLayout>
+    </LinearLayout>
 
-    <!-- ViewPager2 -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <!-- Fragment container -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

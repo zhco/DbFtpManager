@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +37,7 @@ class FtpBrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ftp_browser)
 
-        viewModel = FtpViewModel(application as App)
+        viewModel = ViewModelProvider(this).get(FtpViewModel::class.java)
 
         connection = intent.getSerializableExtra("connection") as ConnectionInfo
 
@@ -50,12 +51,12 @@ class FtpBrowserActivity : AppCompatActivity() {
         val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressBar)
 
         adapter = FileListAdapter(
-            onItemClick = { file ->
+            onItemClick = { file: FtpFileEntry ->
                 if (file.isDirectory) {
                     viewModel.navigateTo(file.fullPath)
                 }
             },
-            onItemMenuClick = { file, view ->
+            onItemMenuClick = { file: FtpFileEntry, view: View ->
                 showFileMenu(file, view)
             }
         )
@@ -71,28 +72,28 @@ class FtpBrowserActivity : AppCompatActivity() {
         findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabCreateFolder)
             .setOnClickListener { showCreateFolderDialog() }
 
-        // 观察数据
+        // Observe data
         lifecycleScope.launch {
-            viewModel.files.collect { files ->
+            viewModel.files.collect { files: List<FtpFileEntry> ->
                 adapter.submitList(files)
                 swipeRefresh.isRefreshing = false
             }
         }
 
         lifecycleScope.launch {
-            viewModel.currentPath.collect { path ->
+            viewModel.currentPath.collect { path: String ->
                 tvPath.text = path
             }
         }
 
         lifecycleScope.launch {
-            viewModel.isLoading.collect { loading ->
+            viewModel.isLoading.collect { loading: Boolean ->
                 progressBar.visibility = if (loading) View.VISIBLE else View.GONE
             }
         }
 
         lifecycleScope.launch {
-            viewModel.error.collect { error ->
+            viewModel.error.collect { error: String? ->
                 error?.let {
                     Toast.makeText(this@FtpBrowserActivity, it, Toast.LENGTH_SHORT).show()
                     viewModel.clearError()
@@ -101,7 +102,7 @@ class FtpBrowserActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.message.collect { msg ->
+            viewModel.message.collect { msg: String? ->
                 msg?.let {
                     Toast.makeText(this@FtpBrowserActivity, it, Toast.LENGTH_SHORT).show()
                     viewModel.clearMessage()
@@ -109,7 +110,7 @@ class FtpBrowserActivity : AppCompatActivity() {
             }
         }
 
-        // 连接
+        // Connect
         viewModel.connect(connection)
     }
 
@@ -125,7 +126,7 @@ class FtpBrowserActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_PICK_FILE && resultCode == RESULT_OK) {
-            data?.data?.let { uri ->
+            data?.data?.let { uri: Uri ->
                 uploadFile(uri)
             }
         }
@@ -152,7 +153,7 @@ class FtpBrowserActivity : AppCompatActivity() {
         android.app.AlertDialog.Builder(this)
             .setTitle(R.string.create_folder)
             .setView(input)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setPositiveButton(R.string.ok) { _: android.content.DialogInterface, _: Int ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
                     viewModel.createFolder(name)
@@ -171,7 +172,7 @@ class FtpBrowserActivity : AppCompatActivity() {
             popup.menu.add(0, MENU_DELETE, 0, R.string.delete_file)
             popup.menu.add(0, MENU_RENAME, 0, R.string.rename)
         }
-        popup.setOnMenuItemClickListener { item ->
+        popup.setOnMenuItemClickListener { item: android.view.MenuItem ->
             when (item.itemId) {
                 MENU_DOWNLOAD -> downloadFile(file)
                 MENU_DELETE -> confirmDelete(file)
@@ -194,7 +195,7 @@ class FtpBrowserActivity : AppCompatActivity() {
         android.app.AlertDialog.Builder(this)
             .setTitle(R.string.confirm_delete_file)
             .setMessage(file.name)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setPositiveButton(R.string.ok) { _: android.content.DialogInterface, _: Int ->
                 viewModel.deleteFile(file.fullPath, file.isDirectory)
             }
             .setNegativeButton(R.string.cancel, null)
@@ -207,7 +208,7 @@ class FtpBrowserActivity : AppCompatActivity() {
         android.app.AlertDialog.Builder(this)
             .setTitle(R.string.rename)
             .setView(input)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setPositiveButton(R.string.ok) { _: android.content.DialogInterface, _: Int ->
                 val newName = input.text.toString().trim()
                 if (newName.isNotEmpty()) {
                     val parentPath = file.fullPath.substringBeforeLast("/")
