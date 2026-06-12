@@ -123,9 +123,11 @@ class SqlEditorFragment : Fragment() {
         val itemsList = history.map { it.sql }
         val listView = android.widget.ListView(requireContext())
         listView.adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, itemsList)
-        listView.setOnItemClickListener { parent: android.widget.AdapterView<*>, view: android.view.View, position: Int, id: Long ->
-            etSql.setText(itemsList[position])
-        }
+        listView.setOnItemClickListener(object : android.widget.AdapterView.OnItemClickListener {
+            override fun onItemClick(parent: android.widget.AdapterView<*>, view: android.view.View, position: Int, id: Long) {
+                etSql.setText(itemsList[position])
+            }
+        })
 
         android.app.AlertDialog.Builder(requireContext())
             .setTitle("SQL 历史记录")
