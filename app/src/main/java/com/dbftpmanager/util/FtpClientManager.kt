@@ -122,7 +122,7 @@ class FtpClientManager {
                     fullPath = if (targetPath.endsWith("/")) "$targetPath${file.name}" else "$targetPath/${file.name}",
                     isDirectory = file.isDirectory,
                     size = file.size,
-                    lastModified = file.timestamp?.toLongOrNull() ?: 0L,
+                    lastModified = file.timestamp?.timeInMillis ?: 0L,
                     permissions = formatPermissions(file),
                     isHidden = file.isHidden
                 )
@@ -274,7 +274,7 @@ class FtpClientManager {
     fun getFileSize(path: String): Long {
         val client = ftpClient ?: return -1
         return try {
-            client.getSize(path)
+            client.getSize(path).toLongOrNull() ?: -1L
         } catch (e: Exception) {
             -1
         }

@@ -9,10 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.QueryResult
@@ -26,7 +26,7 @@ class SqlEditorFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(DatabaseViewModel::class.java)
+        viewModel = DatabaseViewModel(requireActivity().application as App)
         connection = arguments?.getSerializable("connection") as ConnectionInfo
     }
 
@@ -116,7 +116,8 @@ class SqlEditorFragment : Fragment() {
     private fun showHistoryDialog(etSql: EditText) {
         val history = viewModel.sqlHistory.value
         if (history.isEmpty()) {
-            Toast.makeText(requireContext(), "暂无历史记录", Toast.LENGTH_SHORT).show()
+            val duration: Int = Toast.LENGTH_SHORT
+            Toast.makeText(requireContext(), "暂无历史记录", duration).show()
             return
         }
 
