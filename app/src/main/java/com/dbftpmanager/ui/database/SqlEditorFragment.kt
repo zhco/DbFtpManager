@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.QueryResult
@@ -26,7 +24,6 @@ class SqlEditorFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = DatabaseViewModel(requireActivity().application as App)
         connection = arguments?.getSerializable("connection") as ConnectionInfo
     }
 
@@ -36,6 +33,8 @@ class SqlEditorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = DatabaseViewModel(requireActivity().application)
 
         val etSql = view.findViewById<EditText>(R.id.etSqlInput)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
@@ -121,16 +120,17 @@ class SqlEditorFragment : Fragment() {
             return
         }
 
-        val items = history.map { it.sql }.toTypedArray()
-        android.app.AlertDialog.Builder(requireContext())
+        val itemsArray = history.map { it.sql }.toTypedArray()
+        val charSequenceArray: Array<CharSequence> = itemsArray.map { it as CharSequence }.toTypedArray()
+        val dialog = android.app.AlertDialog.Builder(requireContext())
             .setTitle("SQL 历史记录")
-            .setItems(items, object : android.content.DialogInterface.OnClickListener {
-                override fun onClick(dialog: android.content.DialogInterface, which: Int) {
-                    etSql.setText(items[which])
-                }
-            })
-            .setNegativeButton("关闭", null)
-            .show()
+            .create()
+
+        dialog.setItems(charSequenceArray) { _, which: Int ->
+            etSql.setText(itemsArray[which])
+        }
+        dialog.setButton(android.app.AlertDialog.BUTTON_NEGATIVE, "关闭") { _, _ -> }
+        dialog.show()
     }
 
     companion object {
