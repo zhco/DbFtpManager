@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ColumnInfo
 import com.dbftpmanager.data.model.ConnectionInfo
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class TableDataActivity : AppCompatActivity() {
 
-    private val viewModel: DatabaseViewModel by viewModels()
+    private lateinit var viewModel: DatabaseViewModel
     private lateinit var connection: ConnectionInfo
     private var tableName: String = ""
     private var showStructure = false
@@ -31,6 +31,8 @@ class TableDataActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_table_data)
+
+        viewModel = DatabaseViewModel(application as App)
 
         connection = intent.getSerializableExtra("connection") as ConnectionInfo
         tableName = intent.getStringExtra("table_name") ?: ""

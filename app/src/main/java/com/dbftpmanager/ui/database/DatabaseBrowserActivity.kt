@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,12 +25,14 @@ import kotlinx.coroutines.launch
 
 class DatabaseBrowserActivity : AppCompatActivity() {
 
-    private val viewModel: DatabaseViewModel by viewModels()
+    private lateinit var viewModel: DatabaseViewModel
     private lateinit var connection: ConnectionInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_database_browser)
+
+        viewModel = ViewModelProvider(this)[DatabaseViewModel::class.java]
 
         connection = intent.getSerializableExtra("connection") as ConnectionInfo
 

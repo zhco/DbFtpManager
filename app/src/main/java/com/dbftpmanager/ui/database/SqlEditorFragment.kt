@@ -9,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +20,13 @@ import kotlinx.coroutines.launch
 
 class SqlEditorFragment : Fragment() {
 
-    private val viewModel: DatabaseViewModel by viewModels({ requireActivity() })
+    private lateinit var viewModel: DatabaseViewModel
     private lateinit var connection: ConnectionInfo
     private lateinit var resultAdapter: QueryResultAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[DatabaseViewModel::class.java]
         connection = arguments?.getSerializable("connection") as ConnectionInfo
     }
 

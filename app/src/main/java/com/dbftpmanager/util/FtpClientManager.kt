@@ -122,7 +122,7 @@ class FtpClientManager {
                     fullPath = if (targetPath.endsWith("/")) "$targetPath${file.name}" else "$targetPath/${file.name}",
                     isDirectory = file.isDirectory,
                     size = file.size,
-                    lastModified = file.timestamp?.timeInMillis?.toLong() ?: 0L,
+                    lastModified = file.getTimestamp()?.timeInMillis?.toLong() ?: 0L,
                     permissions = formatPermissions(file),
                     isHidden = file.isHidden
                 )

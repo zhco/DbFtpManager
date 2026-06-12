@@ -11,15 +11,16 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dbftpmanager.App
 import com.dbftpmanager.R
 import com.dbftpmanager.data.model.ConnectionInfo
 import com.dbftpmanager.data.model.FtpFileEntry
+import com.dbftpmanager.ui.viewmodel.FtpViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -27,13 +28,15 @@ import java.util.*
 
 class FtpBrowserActivity : AppCompatActivity() {
 
-    private val viewModel: FtpViewModel by viewModels()
+    private lateinit var viewModel: FtpViewModel
     private lateinit var adapter: FileListAdapter
     private lateinit var connection: ConnectionInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ftp_browser)
+
+        viewModel = FtpViewModel(application as App)
 
         connection = intent.getSerializableExtra("connection") as ConnectionInfo
 

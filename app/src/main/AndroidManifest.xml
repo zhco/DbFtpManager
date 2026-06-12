@@ -31,31 +31,20 @@
         </activity>
 
         <activity
-            android:name=".ui.connections.ConnectionListActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.connections.MainActivity" />
-
-        <activity
             android:name=".ui.connections.EditConnectionActivity"
             android:exported="false"
-            android:parentActivityName=".ui.connections.ConnectionListActivity"
+            android:parentActivityName=".ui.connections.MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.ftp.FtpBrowserActivity"
             android:exported="false"
-            android:parentActivityName=".ui.connections.ConnectionListActivity" />
+            android:parentActivityName=".ui.connections.MainActivity" />
 
         <activity
             android:name=".ui.database.DatabaseBrowserActivity"
             android:exported="false"
-            android:parentActivityName=".ui.connections.ConnectionListActivity" />
-
-        <activity
-            android:name=".ui.database.SqlEditorActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.database.DatabaseBrowserActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:parentActivityName=".ui.connections.MainActivity" />
 
         <activity
             android:name=".ui.database.TableDataActivity"

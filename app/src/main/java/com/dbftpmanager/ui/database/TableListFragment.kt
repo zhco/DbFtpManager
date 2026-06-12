@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +16,13 @@ import kotlinx.coroutines.launch
 
 class TableListFragment : Fragment() {
 
-    private val viewModel: DatabaseViewModel by viewModels({ requireActivity() })
+    private lateinit var viewModel: DatabaseViewModel
     private lateinit var tableAdapter: TableListAdapter
     private lateinit var connection: ConnectionInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[DatabaseViewModel::class.java]
         connection = arguments?.getSerializable("connection") as ConnectionInfo
     }
 
