@@ -132,19 +132,38 @@ class FtpBrowserActivity : AppCompatActivity() {
     }
 
     private fun uploadFile(uri: Uri) {
-        val fileName = uri.lastPathSegment?.substringAfterLast("/") ?: "unknown_file"
+        val fileName = getFileNameFromUri(uri) ?: "unknown_file"
         try {
             contentResolver.openInputStream(uri)?.use { inputStream ->
                 val tempFile = File(cacheDir, fileName)
                 tempFile.outputStream().use { output ->
                     inputStream.copyTo(output)
                 }
-                viewModel.uploadFile(tempFile.absolutePath, fileName)
-                tempFile.delete()
+                viewModel.uploadFile(tempFile.absolutePath, fileName) {
+                    tempFile.delete()
+                }
             }
         } catch (e: Exception) {
             Toast.makeText(this, "上传失败: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getFileNameFromUri(uri: Uri): String? {
+        var result: String? = null
+        if (uri.scheme == "content") {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex >= 0) {
+                        result = cursor.getString(nameIndex)
+                    }
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.lastPathSegment?.substringAfterLast("/")
+        }
+        return result
     }
 
     private fun showCreateFolderDialog() {

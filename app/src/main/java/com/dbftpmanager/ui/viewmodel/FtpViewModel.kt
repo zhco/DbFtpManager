@@ -103,7 +103,7 @@ class FtpViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun uploadFile(localPath: String, remoteFileName: String) {
+    fun uploadFile(localPath: String, remoteFileName: String, onComplete: (() -> Unit)? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -121,6 +121,7 @@ class FtpViewModel(application: Application) : AndroidViewModel(application) {
                 _error.value = "上传失败: ${e.message}"
             } finally {
                 _isLoading.value = false
+                onComplete?.invoke()
             }
         }
     }
