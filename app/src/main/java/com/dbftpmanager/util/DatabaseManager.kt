@@ -15,24 +15,21 @@ class DatabaseManager {
 
     init {
         // 注册 JDBC 驱动（Android 环境下需要手动加载）
+        registerDriver("org.sqlite.JDBC")
+        registerDriver("com.mysql.cj.jdbc.Driver")
+        registerDriver("org.postgresql.Driver")
+        registerDriver("com.microsoft.sqlserver.jdbc.SQLServerDriver")
+        registerDriver("oracle.jdbc.OracleDriver")
+        registerDriver("org.mariadb.jdbc.Driver")
+    }
+
+    private fun registerDriver(className: String) {
         try {
-            Class.forName("org.sqlite.JDBC")
-        } catch (_: Exception) {}
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver")
-        } catch (_: Exception) {}
-        try {
-            Class.forName("org.postgresql.Driver")
-        } catch (_: Exception) {}
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
-        } catch (_: Exception) {}
-        try {
-            Class.forName("oracle.jdbc.OracleDriver")
-        } catch (_: Exception) {}
-        try {
-            Class.forName("org.mariadb.jdbc.Driver")
-        } catch (_: Exception) {}
+            Class.forName(className)
+            Log.d(TAG, "驱动注册成功: $className")
+        } catch (e: Exception) {
+            Log.w(TAG, "驱动注册失败: $className - ${e.message}")
+        }
     }
 
     /**
@@ -67,11 +64,13 @@ class DatabaseManager {
         return try {
             disconnect()
             val url = "jdbc:sqlite:$filePath"
+            Log.d(TAG, "连接 SQLite: $url")
             connection = DriverManager.getConnection(url)
             currentDatabase = filePath
+            Log.d(TAG, "SQLite 连接成功")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "连接 SQLite 失败", e)
+            Log.e(TAG, "连接 SQLite 失败: ${e.javaClass.simpleName}: ${e.message}", e)
             false
         }
     }

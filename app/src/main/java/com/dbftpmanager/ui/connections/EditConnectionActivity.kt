@@ -59,7 +59,7 @@ class EditConnectionActivity : AppCompatActivity() {
         }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnTest).setOnClickListener {
-            testConnection()
+            testConnectionSafe()
         }
     }
 
@@ -104,19 +104,23 @@ class EditConnectionActivity : AppCompatActivity() {
 
     private fun loadConnection() {
         lifecycleScope.launch {
-            val connection = withContext(Dispatchers.IO) {
-                (application as App).connectionRepository.getConnectionById(connectionId)
-            }
-            connection?.let {
-                etName.setText(it.name)
-                actvType.setText(it.type.displayName, false)
-                selectedType = it.type
-                etHost.setText(it.host)
-                etPort.setText(it.port.toString())
-                etUsername.setText(it.username)
-                etPassword.setText(it.password)
-                etDatabase.setText(it.databaseName)
-                updateVisibility()
+            try {
+                val connection = withContext(Dispatchers.IO) {
+                    (application as App).connectionRepository.getConnectionById(connectionId)
+                }
+                connection?.let {
+                    etName.setText(it.name)
+                    actvType.setText(it.type.displayName, false)
+                    selectedType = it.type
+                    etHost.setText(it.host)
+                    etPort.setText(it.port.toString())
+                    etUsername.setText(it.username)
+                    etPassword.setText(it.password)
+                    etDatabase.setText(it.databaseName)
+                    updateVisibility()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@EditConnectionActivity, "加载失败: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -163,7 +167,7 @@ class EditConnectionActivity : AppCompatActivity() {
         }
     }
 
-    private fun testConnection() {
+    private fun testConnectionSafe() {
         val host = etHost.text.toString().trim()
         val port = etPort.text.toString().trim().toIntOrNull() ?: selectedType.defaultPort
         val username = etUsername.text.toString().trim()
@@ -180,22 +184,15 @@ class EditConnectionActivity : AppCompatActivity() {
             return
         }
 
+        Toast.makeText(this, "正在测试连接...", Toast.LENGTH_SHORT).show()
+
         lifecycleScope.launch {
             val result = try {
                 withContext(Dispatchers.IO) {
-                    if (selectedType in listOf(ConnectionType.MYSQL, ConnectionType.POSTGRESQL, ConnectionType.SQLSERVER, ConnectionType.ORACLE, ConnectionType.MARIADB, ConnectionType.SQLITE)) {
-                        val dbManager = DatabaseManager()
-                        dbManager.testConnection(selectedType, host, port, username, password, database)
-                    } else {
-                        val ftpManager = FtpClientManager()
-                        val conn = ConnectionInfo(
-                            name = "", type = selectedType, host = host, port = port,
-                            username = username, password = password
-                        )
-                        ftpManager.testConnection(conn)
-                    }
+                    testConnectionInternal(selectedType, host, port, username, password, database)
                 }
             } catch (e: Exception) {
+                android.util.Log.e("EditConnection", "测试连接异常", e)
                 Pair(false, "测试异常: ${e.javaClass.simpleName}: ${e.message}")
             }
             Toast.makeText(
@@ -203,6 +200,32 @@ class EditConnectionActivity : AppCompatActivity() {
                 if (result.first) result.second else "失败: ${result.second}",
                 if (result.first) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
             ).show()
+        }
+    }
+
+    private fun testConnectionInternal(
+        type: ConnectionType,
+        host: String,
+        port: Int,
+        username: String,
+        password: String,
+        database: String
+    ): Pair<Boolean, String> {
+        return try {
+            if (type in listOf(ConnectionType.MYSQL, ConnectionType.POSTGRESQL, ConnectionType.SQLSERVER, ConnectionType.ORACLE, ConnectionType.MARIADB, ConnectionType.SQLITE)) {
+                val dbManager = DatabaseManager()
+                dbManager.testConnection(type, host, port, username, password, database)
+            } else {
+                val ftpManager = FtpClientManager()
+                val conn = ConnectionInfo(
+                    name = "", type = type, host = host, port = port,
+                    username = username, password = password
+                )
+                ftpManager.testConnection(conn)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("EditConnection", "测试连接内部异常", e)
+            Pair(false, "内部错误: ${e.javaClass.simpleName}: ${e.message}")
         }
     }
 
