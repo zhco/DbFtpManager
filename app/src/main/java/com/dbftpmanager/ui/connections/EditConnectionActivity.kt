@@ -24,13 +24,13 @@ class EditConnectionActivity : AppCompatActivity() {
     private var connectionId: Long = 0
     private var isEditing = false
 
-    private lateinit var etName: AutoCompleteTextView
+    private lateinit var etName: com.google.android.material.textfield.TextInputEditText
     private lateinit var actvType: AutoCompleteTextView
-    private lateinit var etHost: AutoCompleteTextView
-    private lateinit var etPort: AutoCompleteTextView
-    private lateinit var etUsername: AutoCompleteTextView
-    private lateinit var etPassword: AutoCompleteTextView
-    private lateinit var etDatabase: AutoCompleteTextView
+    private lateinit var etHost: com.google.android.material.textfield.TextInputEditText
+    private lateinit var etPort: com.google.android.material.textfield.TextInputEditText
+    private lateinit var etUsername: com.google.android.material.textfield.TextInputEditText
+    private lateinit var etPassword: com.google.android.material.textfield.TextInputEditText
+    private lateinit var etDatabase: com.google.android.material.textfield.TextInputEditText
     private lateinit var tilDatabase: com.google.android.material.textfield.TextInputLayout
 
     private val typeList = ConnectionType.values().map { it.displayName }
