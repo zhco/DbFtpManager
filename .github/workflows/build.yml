@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -30,9 +32,29 @@ jobs:
       - name: Clean and Build Debug APK
         run: gradle clean assembleDebug --no-daemon --no-build-cache
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DbFtpManager-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.date.outputs.date }}
+          name: DbFtpManager Build ${{ steps.date.outputs.date }}
+          body: |
+            DbFtpManager 自动构建版本
+            - 构建时间: ${{ steps.date.outputs.date }}
+            - 包含完整的 APK 文件，可直接下载安装
+          files: app/build/outputs/apk/debug/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
