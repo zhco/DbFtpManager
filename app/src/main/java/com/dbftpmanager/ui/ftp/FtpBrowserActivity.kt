@@ -133,18 +133,27 @@ class FtpBrowserActivity : AppCompatActivity() {
 
     private fun uploadFile(uri: Uri) {
         val fileName = getFileNameFromUri(uri) ?: "unknown_file"
-        try {
-            contentResolver.openInputStream(uri)?.use { inputStream ->
-                val tempFile = File(cacheDir, fileName)
-                tempFile.outputStream().use { output ->
-                    inputStream.copyTo(output)
+        lifecycleScope.launch {
+            try {
+                val tempFile = withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                        val file = File(cacheDir, fileName)
+                        file.outputStream().use { output ->
+                            inputStream.copyTo(output)
+                        }
+                        file
+                    }
                 }
-                viewModel.uploadFile(tempFile.absolutePath, fileName) {
-                    tempFile.delete()
+                if (tempFile != null && tempFile.exists()) {
+                    viewModel.uploadFile(tempFile.absolutePath, fileName) {
+                        tempFile.delete()
+                    }
+                } else {
+                    Toast.makeText(this@FtpBrowserActivity, "文件读取失败", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this@FtpBrowserActivity, "上传失败: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            Toast.makeText(this, "上传失败: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

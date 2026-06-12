@@ -159,19 +159,40 @@ class FtpClientManager {
     }
 
     /**
+     * 上传文件（带详细错误信息）
+     */
+    data class UploadResult(val success: Boolean, val error: String = "")
+
+    fun uploadFileWithDetails(localPath: String, remotePath: String): UploadResult {
+        val client = ftpClient ?: return UploadResult(false, "FTP 未连接")
+        return try {
+            val localFile = java.io.File(localPath)
+            if (!localFile.exists()) {
+                return UploadResult(false, "本地文件不存在: $localPath")
+            }
+            Log.d(TAG, "开始上传: local=$localPath, remote=$remotePath, size=${localFile.length()}")
+            val inputStream = java.io.FileInputStream(localFile)
+            val success = client.storeFile(remotePath, inputStream)
+            inputStream.close()
+            if (!success) {
+                val replyCode = client.replyCode
+                val replyString = client.replyString
+                Log.e(TAG, "FTP storeFile 失败: replyCode=$replyCode, reply=$replyString")
+                return UploadResult(false, "服务器拒绝: $replyString (code=$replyCode)")
+            }
+            Log.d(TAG, "上传成功")
+            UploadResult(true)
+        } catch (e: Exception) {
+            Log.e(TAG, "上传文件失败", e)
+            UploadResult(false, e.message ?: "未知错误")
+        }
+    }
+
+    /**
      * 上传文件
      */
     fun uploadFile(localPath: String, remotePath: String): Boolean {
-        val client = ftpClient ?: return false
-        return try {
-            val inputStream = java.io.FileInputStream(localPath)
-            val success = client.storeFile(remotePath, inputStream)
-            inputStream.close()
-            success
-        } catch (e: Exception) {
-            Log.e(TAG, "上传文件失败", e)
-            false
-        }
+        return uploadFileWithDetails(localPath, remotePath).success
     }
 
     /**

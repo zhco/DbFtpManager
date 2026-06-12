@@ -107,18 +107,22 @@ class FtpViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val remotePath = "${_currentPath.value}/$remoteFileName"
-                val success = withContext(Dispatchers.IO) {
-                    ftpManager.uploadFile(localPath, remotePath)
+                val currentDir = _currentPath.value
+                val remotePath = if (currentDir.endsWith("/")) "$currentDir$remoteFileName" else "$currentDir/$remoteFileName"
+                android.util.Log.d("FtpViewModel", "上传文件: local=$localPath, remote=$remotePath")
+                val result = withContext(Dispatchers.IO) {
+                    ftpManager.uploadFileWithDetails(localPath, remotePath)
                 }
-                if (success) {
+                if (result.success) {
                     _message.value = "上传成功"
                     listFiles()
                 } else {
-                    _error.value = "上传失败"
+                    _error.value = "上传失败: ${result.error}"
+                    android.util.Log.e("FtpViewModel", "上传失败: ${result.error}")
                 }
             } catch (e: Exception) {
                 _error.value = "上传失败: ${e.message}"
+                android.util.Log.e("FtpViewModel", "上传异常", e)
             } finally {
                 _isLoading.value = false
                 onComplete?.invoke()
