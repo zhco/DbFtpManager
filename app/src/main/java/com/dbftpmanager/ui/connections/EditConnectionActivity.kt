@@ -170,19 +170,33 @@ class EditConnectionActivity : AppCompatActivity() {
         val password = etPassword.text.toString().trim()
         val database = etDatabase.text.toString().trim()
 
+        // 验证必填字段
+        if (selectedType != ConnectionType.SQLITE && host.isEmpty()) {
+            Toast.makeText(this, "请输入主机地址", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (selectedType == ConnectionType.SQLITE && database.isEmpty()) {
+            Toast.makeText(this, "请输入 SQLite 文件路径", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                if (selectedType in listOf(ConnectionType.MYSQL, ConnectionType.POSTGRESQL, ConnectionType.SQLSERVER, ConnectionType.ORACLE, ConnectionType.MARIADB, ConnectionType.SQLITE)) {
-                    val dbManager = DatabaseManager()
-                    dbManager.testConnection(selectedType, host, port, username, password, database)
-                } else {
-                    val ftpManager = FtpClientManager()
-                    val conn = ConnectionInfo(
-                        name = "", type = selectedType, host = host, port = port,
-                        username = username, password = password
-                    )
-                    ftpManager.testConnection(conn)
+            val result = try {
+                withContext(Dispatchers.IO) {
+                    if (selectedType in listOf(ConnectionType.MYSQL, ConnectionType.POSTGRESQL, ConnectionType.SQLSERVER, ConnectionType.ORACLE, ConnectionType.MARIADB, ConnectionType.SQLITE)) {
+                        val dbManager = DatabaseManager()
+                        dbManager.testConnection(selectedType, host, port, username, password, database)
+                    } else {
+                        val ftpManager = FtpClientManager()
+                        val conn = ConnectionInfo(
+                            name = "", type = selectedType, host = host, port = port,
+                            username = username, password = password
+                        )
+                        ftpManager.testConnection(conn)
+                    }
                 }
+            } catch (e: Exception) {
+                Pair(false, "测试异常: ${e.javaClass.simpleName}: ${e.message}")
             }
             Toast.makeText(
                 this@EditConnectionActivity,

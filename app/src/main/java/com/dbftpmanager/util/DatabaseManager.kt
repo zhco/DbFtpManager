@@ -13,6 +13,28 @@ class DatabaseManager {
     private var connection: Connection? = null
     private var currentDatabase: String = ""
 
+    init {
+        // 注册 JDBC 驱动（Android 环境下需要手动加载）
+        try {
+            Class.forName("org.sqlite.JDBC")
+        } catch (_: Exception) {}
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver")
+        } catch (_: Exception) {}
+        try {
+            Class.forName("org.postgresql.Driver")
+        } catch (_: Exception) {}
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
+        } catch (_: Exception) {}
+        try {
+            Class.forName("oracle.jdbc.OracleDriver")
+        } catch (_: Exception) {}
+        try {
+            Class.forName("org.mariadb.jdbc.Driver")
+        } catch (_: Exception) {}
+    }
+
     /**
      * 连接数据库
      */
@@ -27,11 +49,13 @@ class DatabaseManager {
         return try {
             disconnect()
             val url = buildJdbcUrl(type, host, port, database)
+            Log.d(TAG, "连接数据库: type=$type, url=$url")
             connection = DriverManager.getConnection(url, username, password)
             currentDatabase = database
+            Log.d(TAG, "数据库连接成功")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "连接数据库失败", e)
+            Log.e(TAG, "连接数据库失败: ${e.javaClass.simpleName}: ${e.message}", e)
             false
         }
     }
@@ -76,12 +100,21 @@ class DatabaseManager {
         database: String
     ): Pair<Boolean, String> {
         return try {
+            if (type == ConnectionType.SQLITE) {
+                // SQLite 直接使用文件路径测试
+                val conn = DriverManager.getConnection("jdbc:sqlite:$database")
+                val valid = conn.isValid(5)
+                conn.close()
+                return Pair(valid, if (valid) "连接成功" else "连接验证失败")
+            }
             val url = buildJdbcUrl(type, host, port, database)
+            Log.d(TAG, "测试连接: type=$type, url=$url")
             val conn = DriverManager.getConnection(url, username, password)
             val valid = conn.isValid(5)
             conn.close()
             Pair(valid, if (valid) "连接成功" else "连接验证失败")
         } catch (e: Exception) {
+            Log.e(TAG, "测试连接失败: ${e.javaClass.simpleName}: ${e.message}", e)
             Pair(false, "连接失败: ${e.message}")
         }
     }
