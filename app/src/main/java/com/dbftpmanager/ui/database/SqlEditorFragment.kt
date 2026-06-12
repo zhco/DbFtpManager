@@ -124,9 +124,11 @@ class SqlEditorFragment : Fragment() {
         val items = history.map { it.sql }.toTypedArray()
         android.app.AlertDialog.Builder(requireContext())
             .setTitle("SQL 历史记录")
-            .setItems(items) { _: android.content.DialogInterface, which: Int ->
-                etSql.setText(items[which])
-            }
+            .setItems(items, object : android.content.DialogInterface.OnClickListener {
+                override fun onClick(dialog: android.content.DialogInterface, which: Int) {
+                    etSql.setText(items[which])
+                }
+            })
             .setNegativeButton("关闭", null)
             .show()
     }
