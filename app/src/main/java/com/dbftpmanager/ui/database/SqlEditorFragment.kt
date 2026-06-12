@@ -120,17 +120,18 @@ class SqlEditorFragment : Fragment() {
             return
         }
 
-        val itemsArray = history.map { it.sql }.toTypedArray()
-        val charSequenceArray: Array<CharSequence> = itemsArray.map { it as CharSequence }.toTypedArray()
-        val dialog = android.app.AlertDialog.Builder(requireContext())
-            .setTitle("SQL 历史记录")
-            .create()
-
-        dialog.setItems(charSequenceArray) { _, which: Int ->
-            etSql.setText(itemsArray[which])
+        val itemsList = history.map { it.sql }
+        val listView = android.widget.ListView(requireContext())
+        listView.adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, itemsList)
+        listView.setOnItemClickListener { parent: android.widget.AdapterView<*>, view: android.view.View, position: Int, id: Long ->
+            etSql.setText(itemsList[position])
         }
-        dialog.setButton(android.app.AlertDialog.BUTTON_NEGATIVE, "关闭") { _, _ -> }
-        dialog.show()
+
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("SQL 历史记录")
+            .setView(listView)
+            .setNegativeButton("关闭", null)
+            .show()
     }
 
     companion object {
