@@ -120,9 +120,10 @@ class SqlEditorFragment : Fragment() {
             return
         }
 
-        val itemsList = history.map { it.sql }
+        val itemsList: List<String> = history.map { it.sql }
         val listView = android.widget.ListView(requireContext())
-        listView.adapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, itemsList)
+        val adapter = android.widget.ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, itemsList)
+        listView.adapter = adapter
         listView.setOnItemClickListener(object : android.widget.AdapterView.OnItemClickListener {
             override fun onItemClick(parent: android.widget.AdapterView<*>, view: android.view.View, position: Int, id: Long) {
                 etSql.setText(itemsList[position])
